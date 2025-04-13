@@ -1,62 +1,71 @@
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Random;
 import java.util.Scanner;
 
 public class IPI {
     public static void main(String[] args) {
         try (Scanner entrada = new Scanner(System.in)) {
-            ArrayList<String> banco = new ArrayList<>();
-            Random sorte = new Random();
-            String comando = "";
-            Double IPI = 0.10;
-            Double valorIPI;
-            double somaTotal = 0;
-            
-            // O while vai continuar até o usuário digitar "sair"
+            ArrayList<String> banco = new ArrayList<>(); //aqui é onde vamos guardar as peças
+            Random sorte = new Random(); //isso serve pra gerar o código e preço aleatório
+            String comando = ""; //o comando pra continuar ou sair
+            double IPI = 0.10; //valor do IPI (10%)
+            double valorIPI; //variável que vai guardar o valor calculado do IPI
+            double somaTotal = 0; //pra somar tudo no final
+
+            //formatador pra mostrar dinheiro no estilo do Brasil (R$ e vírgula)
+            NumberFormat formatoBR = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+
+            //enquanto a pessoa não digitar "sair", continua perguntando
             while (!comando.equalsIgnoreCase("sair")) {
-                
                 System.out.println("Liste seus produtos");
-                
-                // Qual será a peça
+
+                //perguntando o nome da peça
                 System.out.println("Qual será a peça?");
                 String peca = entrada.next();
-                int codigo = sorte.nextInt(999999);
+                int codigo = sorte.nextInt(999999); //código aleatório
                 System.out.println("Código da peça: " + codigo);
-                
-                // Preço das peças
-                int valor = sorte.nextInt(101);
-                System.out.println("\nPreço das peças: R$ " + valor);
-                
-                // Quantidade de peças
+
+                //sorteando o preço da peça
+                int valorUnitario = sorte.nextInt(101);
+                System.out.println("\nPreço unitário da peça: " + formatoBR.format(valorUnitario));
+
+                //perguntando a quantidade
                 System.out.println("Quantidade de peças: ");
                 int quantidade = entrada.nextInt();
-                
-                valor *= quantidade;
-                System.out.println("Valor total: " + valor);
-                valorIPI = IPI * valor;
-                System.out.println("\nO valor do IPI: R$ " + valorIPI);
-                valor += valorIPI;
-                System.out.println("Valor total da compra: R$ " + valor);
-                
-                
-                // Adicionando a peça no banco de dados (ArrayList)
-                banco.add("\n" + peca + ": " + "Código: " + codigo + " | Quantidade: " + quantidade + " | Preço total: R$ " + valor);
-                
-                // Perguntar se o usuário quer sair
-                System.out.println("\nDigite 'sair' para terminar ou acrecente um '.' e aperte Enter para continuar.");
+
+                //calculando o total sem o IPI
+                int valorTotal = valorUnitario * quantidade;
+                System.out.println("Valor total sem IPI: " + formatoBR.format(valorTotal));
+
+                //calculando o valor do IPI (10% do total)
+                valorIPI = IPI * valorTotal;
+                System.out.println("\nValor do IPI: " + formatoBR.format(valorIPI));
+
+                //somando o IPI no valor total
+                double valorFinal = valorTotal + valorIPI;
+                System.out.println("Valor total da compra com IPI: " + formatoBR.format(valorFinal));
+
+                //guardando as infos no banco de dados (nossa listinha)
+                banco.add("\n" + peca + ": Código: " + codigo + " | Quantidade: " + quantidade + " | Preço total: " + formatoBR.format(valorFinal));
+
+                //perguntando se quer sair ou continuar
+                System.out.println("\nDigite 'sair' para terminar ou apenas pressione Enter para continuar.");
                 comando = entrada.next();
-                
-                somaTotal += valor;
+
+                //somando tudo
+                somaTotal += valorFinal;
             }
-            
-            // Exibindo todos os produtos adicionados
+
+            //mostrando tudo o que foi cadastrado
             System.out.println("\nProdutos cadastrados:");
             for (String produto : banco) {
                 System.out.println(produto);
             }
-            
-            // Total da compra:
-            System.out.println("\nValor total da compra: R$ " + somaTotal);
+
+            //mostrando o valor total final da compra
+            System.out.println("\nValor total da compra: " + formatoBR.format(somaTotal));
         }
     }
 }
