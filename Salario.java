@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Salario {
     public static void main(String[] args) {
         try (Scanner entrada = new Scanner(System.in)) {
-            double SMB = 1518.00; // Salário mínimo brasileiro
+            double SMB = 1518.00; //salário mínimo brasileiro
             double resultado;
             
             System.out.print("Escreva um salário: R$ ");
